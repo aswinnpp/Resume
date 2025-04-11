@@ -4,6 +4,9 @@ const userRoute = require("./routes/user");
 const env = require("dotenv").config();
 const session = require("express-session");
 const connectDB = require("./dataBase/connectDB");
+
+const rateLimit = require('express-rate-limit');
+
 const adminRoute = require("./routes/admin");
 const app = express();
 
@@ -23,6 +26,23 @@ app.use(
     cookie: { secure: false },
   })
 );
+
+
+
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 mins
+  max: 10, // max 10 requests per window per IP
+  message: {
+    status: 429,
+    error: "Too many login attempts. Please try again after 15 minutes."
+  }
+});
+
+
+
+app.use('/auth', authLimiter);
+
 
 connectDB()
 
