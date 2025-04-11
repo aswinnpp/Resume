@@ -3,7 +3,7 @@ const path = require("path");
 const userRoute = require("./routes/user");
 const env = require("dotenv").config();
 const session = require("express-session");
-// const connectDB = require("./dataBase/connectDB");
+const connectDB = require("./dataBase/connectDB");
 const adminRoute = require("./routes/admin");
 const app = express();
 
@@ -24,7 +24,7 @@ app.use(
   })
 );
 
-// connectDB()
+connectDB()
 
 // app.use("/admin", adminRoute);
 app.use("/", userRoute);
