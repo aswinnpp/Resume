@@ -60,6 +60,7 @@ exports.register = async (req, res) => {
     req.flash('success', 'Registration successful! Please login.');
     res.redirect('/login');
   } catch (error) {
+    console.error('Registration error:', error);
     req.flash('error', 'Registration failed. Please try again.');
     res.redirect('/register');
   }
@@ -85,7 +86,7 @@ exports.logout = (req, res) => {
 
 // Check if user is authenticated
 exports.isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated && req.isAuthenticated()) {
     return next();
   }
   req.flash('error', 'Please login to access this page');

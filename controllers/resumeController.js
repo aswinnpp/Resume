@@ -1,6 +1,9 @@
 const User = require('../dataBase/models/User');
 const puppeteer = require('puppeteer');
 const path = require('path');
+const Resume = require('../models/resume');
+const pdfService = require('../services/pdfService');
+const ejs = require('ejs');
 
 // Update resume data
 exports.updateResumeData = async (req, res) => {
@@ -119,4 +122,100 @@ exports.getTemplates = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch templates' });
   }
+};
+
+// Preview resume
+exports.previewResume = async (req, res) => {
+  try {
+    console.log("Preview resume called with ID:", req.params.id);
+    console.log("User ID:", req.user._id);
+    
+    const resume = await Resume.findOne({ _id: req.params.id, user: req.user._id });
+    console.log("Resume found:", resume ? "Yes" : "No");
+    
+    if (!resume) {
+      console.log("Resume not found, redirecting to dashboard");
+      req.flash('error', 'Resume not found');
+      return res.redirect('/dashboard');
+    }
+
+    // Render the appropriate template
+    const templatePath = path.join(__dirname, '..', 'views', 'templates', `${resume.template}.ejs`);
+    console.log("Template path:", templatePath);
+    
+    const template = await ejs.renderFile(templatePath, { resume });
+    console.log("Template rendered successfully");
+    
+    // Render the preview page with the template
+    return res.render('resume/preview', { 
+      title: 'Preview Resume',
+      resume,
+      template
+    });
+  } catch (error) {
+    console.error('Preview resume error:', error);
+    req.flash('error', 'Error previewing resume: ' + error.message);
+    return res.redirect('/dashboard');
+  }
+};
+
+// Download PDF
+exports.downloadPDF = async (req, res) => {
+  try {
+    const resume = await Resume.findOne({ _id: req.params.id, user: req.user._id });
+    if (!resume) {
+      req.flash('error', 'Resume not found');
+      return res.redirect('/dashboard');
+    }
+
+    // Render the template
+    const templatePath = path.join(__dirname, '..', 'views', 'templates', `${resume.template}.ejs`);
+    const template = await ejs.renderFile(templatePath, { resume });
+
+    // Generate PDF
+    const pdf = await pdfService.generatePDF(resume, template);
+
+    // Set headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=${resume.personalInfo.fullName.replace(/\s+/g, '_')}_resume.pdf`);
+    
+    // Send the PDF
+    return res.send(pdf);
+  } catch (error) {
+    console.error('Download PDF error:', error);
+    req.flash('error', 'Error generating PDF');
+    return res.redirect('/dashboard');
+  }
+};
+
+// Delete resume
+exports.deleteResume = async (req, res) => {
+    try {
+        const resumeId = req.params.id;
+        const userId = req.user._id;
+
+        // Find and delete the resume, ensuring it belongs to the user
+        const resume = await Resume.findOneAndDelete({
+            _id: resumeId,
+            user: userId
+        });
+
+        if (!resume) {
+            return res.status(404).json({
+                success: false,
+                message: 'Resume not found or you do not have permission to delete it'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Resume deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting resume:', error);
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while deleting the resume'
+        });
+    }
 }; 

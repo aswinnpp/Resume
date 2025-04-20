@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - <%= data.personalInfo.fullName %></title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            color: #2c3e50;
+            background-color: #fff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        .name {
+            font-size: 32px;
+            font-weight: 300;
+            margin: 0;
+            color: #2c3e50;
+        }
+        .contact-info {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+        }
+        .item {
+            margin-bottom: 20px;
+        }
+        .item-title {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .item-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .item-date {
+            color: #95a5a6;
+            font-size: 0.8em;
+            font-style: italic;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .skill-item {
+            background-color: #ecf0f1;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            color: #2c3e50;
+        }
+        .summary {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #34495e;
+        }
+        .project-tech {
+            margin-top: 8px;
+        }
+        .project-link {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .project-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="name"><%= data.personalInfo.fullName %></div>
+        <div class="contact-info">
+            <%= data.personalInfo.email %><br>
+            <%= data.personalInfo.phone %><br>
+            <%= data.personalInfo.address %>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Summary</div>
+        <p class="summary"><%= data.personalInfo.summary %></p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Experience</div>
+        <% data.experience.forEach(function(exp) { %>
+            <div class="item">
+                <div class="item-title"><%= exp.position %></div>
+                <div class="item-subtitle"><%= exp.company %></div>
+                <div class="item-date"><%= exp.startDate.toLocaleDateString() %> - <%= exp.endDate.toLocaleDateString() %></div>
+                <p><%= exp.description %></p>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Education</div>
+        <% data.education.forEach(function(edu) { %>
+            <div class="item">
+                <div class="item-title"><%= edu.school %></div>
+                <div class="item-subtitle"><%= edu.degree %> in <%= edu.fieldOfStudy %></div>
+                <div class="item-date"><%= edu.startDate.toLocaleDateString() %> - <%= edu.endDate.toLocaleDateString() %></div>
+                <% if (edu.gpa) { %>
+                    <div>GPA: <%= edu.gpa %></div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Skills</div>
+        <div class="skills-list">
+            <% data.skills.forEach(function(skill) { %>
+                <div class="skill-item"><%= skill %></div>
+            <% }); %>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Projects</div>
+        <% data.projects.forEach(function(project) { %>
+            <div class="item">
+                <div class="item-title"><%= project.name %></div>
+                <p><%= project.description %></p>
+                <div class="project-tech">
+                    <% project.technologies.forEach(function(tech) { %>
+                        <div class="skill-item"><%= tech %></div>
+                    <% }); %>
+                </div>
+                <% if (project.link) { %>
+                    <a href="<%= project.link %>" class="project-link" target="_blank">View Project</a>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html> 

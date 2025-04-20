@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume - <%= data.personalInfo.fullName %></title>
+    <title>Resume - <%= resume.personalInfo.fullName || 'My Resume' %></title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -67,68 +67,97 @@
 </head>
 <body>
     <div class="header">
-        <div class="name"><%= data.personalInfo.fullName %></div>
+        <div class="name"><%= resume.personalInfo.fullName || 'Full Name' %></div>
         <div class="contact-info">
-            <%= data.personalInfo.email %> | <%= data.personalInfo.phone %><br>
-            <%= data.personalInfo.address %>
+            <%= resume.personalInfo.email || 'Email' %> | <%= resume.personalInfo.phone || 'Phone' %><br>
+            <%= resume.personalInfo.location || 'Location' %>
         </div>
     </div>
 
+    <% if (resume.summary) { %>
     <div class="section">
         <div class="section-title">Professional Summary</div>
-        <p><%= data.personalInfo.summary %></p>
+        <p><%= resume.summary %></p>
     </div>
+    <% } %>
 
+    <% if (resume.education && resume.education.length > 0) { %>
     <div class="section">
         <div class="section-title">Education</div>
-        <% data.education.forEach(function(edu) { %>
+        <% resume.education.forEach(function(edu) { %>
             <div class="item">
                 <div class="item-title"><%= edu.school %></div>
-                <div class="item-subtitle"><%= edu.degree %> in <%= edu.fieldOfStudy %></div>
-                <div class="item-date"><%= edu.startDate.toLocaleDateString() %> - <%= edu.endDate.toLocaleDateString() %></div>
+                <div class="item-subtitle"><%= edu.degree %> <%= edu.field ? 'in ' + edu.field : '' %></div>
+                <div class="item-date">
+                    <%= edu.startDate ? new Date(edu.startDate).toLocaleDateString() : '' %> - 
+                    <%= edu.endDate ? new Date(edu.endDate).toLocaleDateString() : 'Present' %>
+                </div>
                 <% if (edu.gpa) { %>
                     <div>GPA: <%= edu.gpa %></div>
+                <% } %>
+                <% if (edu.description) { %>
+                    <p><%= edu.description %></p>
                 <% } %>
             </div>
         <% }); %>
     </div>
+    <% } %>
 
+    <% if (resume.experience && resume.experience.length > 0) { %>
     <div class="section">
         <div class="section-title">Experience</div>
-        <% data.experience.forEach(function(exp) { %>
+        <% resume.experience.forEach(function(exp) { %>
             <div class="item">
                 <div class="item-title"><%= exp.position %> at <%= exp.company %></div>
-                <div class="item-date"><%= exp.startDate.toLocaleDateString() %> - <%= exp.endDate.toLocaleDateString() %></div>
+                <div class="item-subtitle"><%= exp.location || '' %></div>
+                <div class="item-date">
+                    <%= exp.startDate ? new Date(exp.startDate).toLocaleDateString() : '' %> - 
+                    <%= exp.endDate ? new Date(exp.endDate).toLocaleDateString() : 'Present' %>
+                </div>
                 <p><%= exp.description %></p>
+                <% if (exp.achievements && exp.achievements.length > 0) { %>
+                    <ul>
+                        <% exp.achievements.forEach(function(achievement) { %>
+                            <li><%= achievement %></li>
+                        <% }); %>
+                    </ul>
+                <% } %>
             </div>
         <% }); %>
     </div>
+    <% } %>
 
+    <% if (resume.skills && resume.skills.length > 0) { %>
     <div class="section">
         <div class="section-title">Skills</div>
         <div class="skills-list">
-            <% data.skills.forEach(function(skill) { %>
+            <% resume.skills.forEach(function(skill) { %>
                 <div class="skill-item"><%= skill %></div>
             <% }); %>
         </div>
     </div>
+    <% } %>
 
+    <% if (resume.projects && resume.projects.length > 0) { %>
     <div class="section">
         <div class="section-title">Projects</div>
-        <% data.projects.forEach(function(project) { %>
+        <% resume.projects.forEach(function(project) { %>
             <div class="item">
                 <div class="item-title"><%= project.name %></div>
                 <p><%= project.description %></p>
+                <% if (project.technologies && project.technologies.length > 0) { %>
                 <div class="skills-list">
                     <% project.technologies.forEach(function(tech) { %>
                         <div class="skill-item"><%= tech %></div>
                     <% }); %>
                 </div>
+                <% } %>
                 <% if (project.link) { %>
-                    <div>Link: <%= project.link %></div>
+                    <div>Link: <a href="<%= project.link %>" target="_blank"><%= project.link %></a></div>
                 <% } %>
             </div>
         <% }); %>
     </div>
+    <% } %>
 </body>
 </html> 
