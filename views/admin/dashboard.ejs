@@ -15,7 +15,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Users</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalUsers %></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalUsers || 0 %></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -31,7 +31,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Resumes</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalResumes %></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalResumes || 0 %></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-file-alt fa-2x text-gray-300"></i>
@@ -46,8 +46,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Templates</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.activeTemplates %></div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Templates</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalTemplates || 0 %></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-paint-brush fa-2x text-gray-300"></i>
@@ -62,8 +62,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">New Users (Today)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.newUsersToday %></div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Recent Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= (stats.recentUsers || []).length %></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-user-plus fa-2x text-gray-300"></i>
@@ -95,7 +95,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% recentUsers.forEach(user => { %>
+                                <% (stats.recentUsers || []).forEach(user => { %>
                                 <tr>
                                     <td><%= user.name %></td>
                                     <td><%= user.email %></td>
@@ -107,6 +107,11 @@
                                     </td>
                                 </tr>
                                 <% }) %>
+                                <% if (!(stats.recentUsers && stats.recentUsers.length)) { %>
+                                <tr>
+                                    <td colspan="4" class="text-center">No recent users found</td>
+                                </tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>
@@ -132,10 +137,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% popularTemplates.forEach(template => { %>
+                                <% (stats.popularTemplates || []).forEach(template => { %>
                                 <tr>
                                     <td><%= template.name %></td>
-                                    <td><%= template.usageCount %></td>
+                                    <td><%= template.usageCount || 0 %></td>
                                     <td>
                                         <span class="badge <%= template.isActive ? 'bg-success' : 'bg-danger' %>">
                                             <%= template.isActive ? 'Active' : 'Inactive' %>
@@ -143,6 +148,11 @@
                                     </td>
                                 </tr>
                                 <% }) %>
+                                <% if (!(stats.popularTemplates && stats.popularTemplates.length)) { %>
+                                <tr>
+                                    <td colspan="3" class="text-center">No templates found</td>
+                                </tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>

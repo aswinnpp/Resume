@@ -18,7 +18,7 @@
                 <p class="lead">Manage your resumes and create new ones</p>
             </div>
             <div class="col-auto">
-                <a href="/resume/new" class="btn btn-primary btn-lg">
+                <a href="/templates" class="btn btn-primary btn-lg">
                     <i class="fas fa-plus"></i> Create New Resume
                 </a>
             </div>
@@ -60,7 +60,7 @@
                                         <a href="/resume/edit/<%= resume._id %>" class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <a href="/resume/preview/<%= resume._id %>" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                        <a href="/resume/preview/<%= resume._id %>" class="btn btn-sm btn-outline-secondary">
                                             <i class="fas fa-eye"></i> Preview
                                         </a>
                                         <button type="button" class="btn btn-sm btn-outline-danger delete-resume" data-resume-id="<%= resume._id %>">
@@ -106,19 +106,32 @@
                         }
                     });
                     
-                    const data = await response.json();
+                    const result = await response.json();
                     
-                    if (data.success) {
+                    if (result.success) {
                         // Remove the resume card from the UI
                         this.closest('.col-md-6').remove();
+                        
                         // Show success message
-                        showAlert('success', 'Resume deleted successfully');
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                        alertDiv.role = 'alert';
+                        alertDiv.innerHTML = `
+                            Resume deleted successfully
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        `;
+                        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.row'));
+                        
+                        // Auto dismiss after 3 seconds
+                        setTimeout(() => {
+                            alertDiv.remove();
+                        }, 3000);
                     } else {
-                        showAlert('danger', data.message || 'Failed to delete resume');
+                        alert('Failed to delete resume: ' + result.message);
                     }
                 } catch (error) {
-                    console.error('Error:', error);
-                    showAlert('danger', 'An error occurred while deleting the resume');
+                    console.error('Error deleting resume:', error);
+                    alert('An error occurred while deleting the resume');
                 }
             }
         });

@@ -4,88 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Builder - Create Professional Resumes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
 </head>
 <body>
     <%- include('partials/header') %>
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6">
-                <h1 class="display-4 mb-4">Create Your Professional Resume</h1>
-                <p class="lead mb-4">Build a stunning resume in minutes with our easy-to-use resume builder. Choose from professional templates and customize to your needs.</p>
-                <div class="d-grid gap-3 d-md-flex">
-                    <a href="/register" class="btn btn-primary btn-lg me-md-2">Get Started</a>
-                    <a href="/login" class="btn btn-outline-secondary btn-lg">Sign In</a>
+    <!-- Hero Section -->
+    <div class="bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="display-4 fw-bold">Create Your Professional Resume</h1>
+                    <p class="lead">Build a stunning resume in minutes with our easy-to-use builder. Choose from professionally designed templates and get hired faster.</p>
+                    <% if (!user) { %>
+                        <a href="/register" class="btn btn-light btn-lg me-3">Get Started</a>
+                        <a href="/login" class="btn btn-outline-light btn-lg">Login</a>
+                    <% } else { %>
+                        <a href="/templates" class="btn btn-light btn-lg">Create Resume</a>
+                    <% } %>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <img src="/images/resume-preview.svg" alt="Resume Preview" class="img-fluid rounded shadow">
-            </div>
-        </div>
-
-        <div class="row mt-5">
-            <div class="col-12 text-center mb-4">
-                <h2>Why Choose Our Resume Builder?</h2>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-paint-brush fa-3x mb-3 text-primary"></i>
-                        <h3 class="card-title">Professional Templates</h3>
-                        <p class="card-text">Choose from a variety of professionally designed templates that stand out to employers.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-magic fa-3x mb-3 text-primary"></i>
-                        <h3 class="card-title">Easy Customization</h3>
-                        <p class="card-text">Customize every aspect of your resume with our intuitive builder interface.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-file-pdf fa-3x mb-3 text-primary"></i>
-                        <h3 class="card-title">Instant Download</h3>
-                        <p class="card-text">Download your resume as a PDF file instantly, ready to send to employers.</p>
-                    </div>
+                <div class="col-md-6">
+                    <img src="/images/hero-image.png" alt="Resume Builder" class="img-fluid">
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row mt-5">
-            <div class="col-12 text-center mb-4">
-                <h2>Featured Templates</h2>
-            </div>
+    <!-- Features Section -->
+    <div class="container py-5">
+        <h2 class="text-center mb-5">Why Choose Our Resume Builder?</h2>
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="card template-card">
-                    <img src="/images/templates/template1.jpg" class="card-img-top" alt="Template 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Professional</h5>
-                        <p class="card-text">Clean and professional design perfect for any industry.</p>
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-paint-brush fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title h4">Professional Templates</h3>
+                        <p class="card-text">Choose from a variety of professionally designed templates that stand out.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card template-card">
-                    <img src="/images/templates/template2.jpg" class="card-img-top" alt="Template 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Modern</h5>
-                        <p class="card-text">Contemporary design with a focus on readability and style.</p>
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-magic fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title h4">Easy to Use</h3>
+                        <p class="card-text">Our intuitive builder makes it simple to create a professional resume in minutes.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card template-card">
-                    <img src="/images/templates/template3.svg" class="card-img-top" alt="Template 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Executive</h5>
-                        <p class="card-text">Elegant design for senior professionals and executives.</p>
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-download fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title h4">PDF Download</h3>
+                        <p class="card-text">Download your resume in PDF format, ready to send to employers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">How It Works</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="circle bg-primary text-white mb-3">1</div>
+                        <h4>Choose Template</h4>
+                        <p>Select from our professionally designed templates.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="circle bg-primary text-white mb-3">2</div>
+                        <h4>Fill Details</h4>
+                        <p>Enter your information in our easy-to-use form.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="circle bg-primary text-white mb-3">3</div>
+                        <h4>Preview</h4>
+                        <p>Review your resume and make any necessary changes.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="circle bg-primary text-white mb-3">4</div>
+                        <h4>Download</h4>
+                        <p>Download your resume in PDF format.</p>
                     </div>
                 </div>
             </div>

@@ -17,23 +17,24 @@ app.set("views", path.join(__dirname, "views"));
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Session configuration
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
     },
   })
 );
 
 // Initialize Passport and restore authentication state from session
+require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -65,8 +66,16 @@ connectDB();
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
 
-console.log("User routes loaded");
-console.log("Admin routes loaded");
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).render('404', { title: 'Page Not Found' });
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on http://localhost:${process.env.PORT}`);

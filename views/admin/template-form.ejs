@@ -1,0 +1,159 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-0"><%= template ? 'Edit Template' : 'Add New Template' %></h1>
+                </div>
+                <div class="card-body">
+                    <form action="<%= template ? `/admin/templates/${template._id}` : '/admin/templates' %>" 
+                          method="POST" 
+                          enctype="multipart/form-data">
+                        <% if (template) { %>
+                            <input type="hidden" name="_method" value="PUT">
+                        <% } %>
+
+                        <!-- Template Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Template Name</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name" 
+                                   value="<%= template ? template.name : '' %>" 
+                                   required>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="3" 
+                                      required><%= template ? template.description : '' %></textarea>
+                        </div>
+
+                        <!-- Template File -->
+                        <div class="mb-3">
+                            <label for="templateFile" class="form-label">Template File (.ejs)</label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="templateFile" 
+                                   name="template" 
+                                   accept=".ejs"
+                                   <%= template ? '' : 'required' %>>
+                            <small class="text-muted">Upload your EJS template file containing both HTML and CSS</small>
+                            <% if (template && template.templateFile) { %>
+                                <div class="mt-2">
+                                    <span class="text-muted">Current template: <%= template.templateFile %></span>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <!-- Template HTML -->
+                        <div class="mb-3">
+                            <label for="html" class="form-label">Or Enter Template HTML Directly</label>
+                            <textarea class="form-control" 
+                                      id="html" 
+                                      name="html" 
+                                      rows="15" 
+                                      <%= !template && !template?.templateFile ? 'required' : '' %>><%= template ? template.html : '' %></textarea>
+                            <small class="text-muted">Use EJS syntax for dynamic content. Example: &lt;%= resume.personalInfo.fullName %&gt;</small>
+                        </div>
+
+                        <!-- Template CSS -->
+                        <div class="mb-3">
+                            <label for="css" class="form-label">Template CSS</label>
+                            <textarea class="form-control" 
+                                      id="css" 
+                                      name="css" 
+                                      rows="10" 
+                                      <%= !template && !template?.templateFile ? 'required' : '' %>><%= template ? template.css : '' %></textarea>
+                        </div>
+
+                        <!-- Preview Image -->
+                        <div class="mb-3">
+                            <label for="preview" class="form-label">Preview Image</label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="preview" 
+                                   name="preview" 
+                                   accept="image/*"
+                                   <%= template ? '' : 'required' %>>
+                            <% if (template && template.preview) { %>
+                                <div class="mt-2">
+                                    <img src="/images/templates/<%= template.preview %>" 
+                                         alt="Current preview" 
+                                         style="max-width: 200px;">
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <!-- Template Status -->
+                        <div class="mb-3">
+                            <label for="isActive" class="form-label">Status</label>
+                            <select class="form-select" id="isActive" name="isActive">
+                                <option value="true" <%= template && template.isActive ? 'selected' : '' %>>Active</option>
+                                <option value="false" <%= template && !template.isActive ? 'selected' : '' %>>Inactive</option>
+                            </select>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="professional" <%= template && template.category === 'professional' ? 'selected' : '' %>>Professional</option>
+                                <option value="creative" <%= template && template.category === 'creative' ? 'selected' : '' %>>Creative</option>
+                                <option value="academic" <%= template && template.category === 'academic' ? 'selected' : '' %>>Academic</option>
+                                <option value="technical" <%= template && template.category === 'technical' ? 'selected' : '' %>>Technical</option>
+                                <option value="minimal" <%= template && template.category === 'minimal' ? 'selected' : '' %>>Minimal</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-between">
+                            <a href="/admin/templates" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <%= template ? 'Update Template' : 'Create Template' %>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code Editor Enhancement -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+
+<script>
+    // Initialize code editors
+    document.addEventListener('DOMContentLoaded', function() {
+        // HTML Editor
+        CodeMirror.fromTextArea(document.getElementById('html'), {
+            mode: 'xml',
+            theme: 'monokai',
+            lineNumbers: true,
+            autoCloseTags: true,
+            lineWrapping: true
+        });
+
+        // CSS Editor
+        CodeMirror.fromTextArea(document.getElementById('css'), {
+            mode: 'css',
+            theme: 'monokai',
+            lineNumbers: true,
+            lineWrapping: true
+        });
+    });
+</script>
+
+<%- include('../partials/admin-footer') %> 

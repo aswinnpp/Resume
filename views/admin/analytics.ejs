@@ -1,0 +1,234 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Analytics Dashboard</h1>
+
+    <!-- Stats Cards -->
+    <div class="row">
+        <!-- Total Users Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalUsers %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Resumes Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Resumes</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.totalResumes %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Templates Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Templates</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.activeTemplates %></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion Rate Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Conversion Rate</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= stats.conversionRate %>%</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-percentage fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Growth Charts Row -->
+    <div class="row">
+        <!-- User Growth Chart -->
+        <div class="col-xl-4 col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">User Growth</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="userGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Growth Chart -->
+        <div class="col-xl-4 col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Template Growth</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="templateGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Growth Chart -->
+        <div class="col-xl-4 col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Resume Growth</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="resumeGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resume Distribution Chart -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Resume Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="resumeDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// User Growth Chart
+const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+new Chart(userGrowthCtx, {
+    type: 'line',
+    data: {
+        labels: <%- JSON.stringify(stats.userGrowth.labels) %>,
+        datasets: [{
+            label: 'New Users',
+            data: <%- JSON.stringify(stats.userGrowth.data) %>,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Template Growth Chart
+const templateGrowthCtx = document.getElementById('templateGrowthChart').getContext('2d');
+new Chart(templateGrowthCtx, {
+    type: 'line',
+    data: {
+        labels: <%- JSON.stringify(stats.templateGrowth.labels) %>,
+        datasets: [{
+            label: 'New Templates',
+            data: <%- JSON.stringify(stats.templateGrowth.data) %>,
+            borderColor: 'rgb(255, 99, 132)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Resume Growth Chart
+const resumeGrowthCtx = document.getElementById('resumeGrowthChart').getContext('2d');
+new Chart(resumeGrowthCtx, {
+    type: 'line',
+    data: {
+        labels: <%- JSON.stringify(stats.resumeGrowth.labels) %>,
+        datasets: [{
+            label: 'New Resumes',
+            data: <%- JSON.stringify(stats.resumeGrowth.data) %>,
+            borderColor: 'rgb(54, 162, 235)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Resume Distribution Chart
+const resumeDistributionCtx = document.getElementById('resumeDistributionChart').getContext('2d');
+new Chart(resumeDistributionCtx, {
+    type: 'doughnut',
+    data: {
+        labels: <%- JSON.stringify(stats.resumeDistribution.labels) %>,
+        datasets: [{
+            data: <%- JSON.stringify(stats.resumeDistribution.data) %>,
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)'
+            ]
+        }]
+    },
+    options: {
+        maintainAspectRatio: false
+    }
+});
+</script>
+
+<%- include('../partials/admin-footer') %> 

@@ -1,38 +1,154 @@
-/* General Styles */
+/* Global Styles */
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
     background-color: #f8f9fa;
     color: #333;
 }
 
-/* Card Styles */
+/* Hero Section */
+.bg-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+/* Features Section */
 .card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* How It Works Section */
+.circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto;
+}
+
+/* Template Selection Page */
+.template-card {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.template-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.template-card img {
+    max-height: 300px;
+    object-fit: cover;
+}
+
+/* Resume Edit Page */
+.progress {
+    height: 8px;
     margin-bottom: 20px;
 }
 
+.section-card {
+    margin-bottom: 20px;
+}
+
+.section-card .card-header {
+    background-color: #f8f9fa;
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+.section-card .card-body {
+    padding: 20px;
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #003d80 100%);
+}
+
+/* Preview Page */
+.preview-container {
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin: 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+    
+    .hero-section img {
+        margin-top: 30px;
+    }
+    
+    .circle {
+        margin-bottom: 20px;
+    }
+}
+
+/* Error Messages */
+.alert {
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Loading States */
+.loading {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Card Styles */
 .card-header {
     background-color: #fff;
     border-bottom: 1px solid #eee;
 }
 
-/* Form Styles */
-.form-control:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
-}
-
 /* Button Styles */
-.btn-primary {
-    background-color: #3498db;
-    border-color: #3498db;
-}
-
-.btn-primary:hover {
-    background-color: #2980b9;
-    border-color: #2980b9;
-}
-
 .btn-success {
     background-color: #2ecc71;
     border-color: #2ecc71;
@@ -44,27 +160,8 @@ body {
 }
 
 /* Progress Bar */
-.progress {
-    height: 10px;
-    border-radius: 5px;
-}
-
 .progress-bar {
     background-color: #3498db;
-}
-
-/* Template Selection */
-.template-card {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.template-card:hover {
-    transform: translateY(-5px);
-}
-
-.template-card.selected {
-    border: 2px solid #3498db;
 }
 
 /* Resume Builder Steps */
@@ -118,21 +215,6 @@ body {
 .skill-tag .remove {
     cursor: pointer;
     font-weight: bold;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .step-indicator {
-        flex-direction: column;
-    }
-    
-    .step {
-        margin-bottom: 10px;
-    }
-    
-    .template-card {
-        margin-bottom: 20px;
-    }
 }
 
 /* Animation */

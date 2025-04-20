@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= resume.personalInfo.fullName %> - Resume</title>
+    <link rel="stylesheet" href="/css/templates/modern.css">
+</head>
+<body>
+    <div class="resume-container">
+        <!-- Header Section -->
+        <header class="resume-header">
+            <h1 class="name"><%= resume.personalInfo.fullName %></h1>
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> <%= resume.personalInfo.email %></p>
+                <p><i class="fas fa-phone"></i> <%= resume.personalInfo.phone %></p>
+                <p><i class="fas fa-map-marker-alt"></i> <%= resume.personalInfo.location %></p>
+            </div>
+        </header>
+
+        <!-- Summary Section -->
+        <section class="summary-section">
+            <h2>Professional Summary</h2>
+            <p><%= resume.summary %></p>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="experience-section">
+            <h2>Work Experience</h2>
+            <% resume.experience.forEach(exp => { %>
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <h3><%= exp.position %></h3>
+                        <p class="company"><%= exp.company %></p>
+                        <p class="date"><%= new Date(exp.startDate).toLocaleDateString() %> - <%= exp.current ? 'Present' : new Date(exp.endDate).toLocaleDateString() %></p>
+                    </div>
+                    <p class="description"><%= exp.description %></p>
+                </div>
+            <% }); %>
+        </section>
+
+        <!-- Education Section -->
+        <section class="education-section">
+            <h2>Education</h2>
+            <% resume.education.forEach(edu => { %>
+                <div class="education-item">
+                    <h3><%= edu.degree %> in <%= edu.fieldOfStudy %></h3>
+                    <p class="school"><%= edu.school %></p>
+                    <p class="date"><%= new Date(edu.startDate).toLocaleDateString() %> - <%= new Date(edu.endDate).toLocaleDateString() %></p>
+                    <% if (edu.gpa) { %>
+                        <p class="gpa">GPA: <%= edu.gpa %></p>
+                    <% } %>
+                </div>
+            <% }); %>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills-section">
+            <h2>Skills</h2>
+            <div class="skills-container">
+                <% resume.skills.forEach(skill => { %>
+                    <span class="skill-tag"><%= skill %></span>
+                <% }); %>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="projects-section">
+            <h2>Projects</h2>
+            <% resume.projects.forEach(project => { %>
+                <div class="project-item">
+                    <h3><%= project.name %></h3>
+                    <p class="description"><%= project.description %></p>
+                    <% if (project.technologies && project.technologies.length > 0) { %>
+                        <div class="technologies">
+                            <% project.technologies.forEach(tech => { %>
+                                <span class="tech-tag"><%= tech %></span>
+                            <% }); %>
+                        </div>
+                    <% } %>
+                    <% if (project.link) { %>
+                        <a href="<%= project.link %>" class="project-link" target="_blank">View Project</a>
+                    <% } %>
+                </div>
+            <% }); %>
+        </section>
+    </div>
+</body>
+</html> 

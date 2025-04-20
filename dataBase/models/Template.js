@@ -13,19 +13,19 @@ const templateSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    required: true
+    
   },
   preview: {
     type: String,
-    required: true
+   
   },
   html: {
     type: String,
-    required: true
+   
   },
   css: {
     type: String,
-    required: true
+   
   },
   isActive: {
     type: Boolean,
@@ -43,7 +43,7 @@ const templateSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Admin',
-    required: true
+    
   }
 }, { timestamps: true });
 
