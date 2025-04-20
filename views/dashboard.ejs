@@ -1,0 +1,105 @@
+<%- include('layouts/main') %>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Resume Progress</h4>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: <%= user.resumeData ? (Object.keys(user.resumeData).length * 20) : 0 %>%">
+                        <%= user.resumeData ? (Object.keys(user.resumeData).length * 20) : 0 %>%
+                    </div>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Personal Information
+                        <span class="badge bg-<%= user.resumeData?.personalInfo ? 'success' : 'secondary' %> rounded-pill">
+                            <i class="fas fa-<%= user.resumeData?.personalInfo ? 'check' : 'times' %>"></i>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Education
+                        <span class="badge bg-<%= user.resumeData?.education?.length ? 'success' : 'secondary' %> rounded-pill">
+                            <i class="fas fa-<%= user.resumeData?.education?.length ? 'check' : 'times' %>"></i>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Experience
+                        <span class="badge bg-<%= user.resumeData?.experience?.length ? 'success' : 'secondary' %> rounded-pill">
+                            <i class="fas fa-<%= user.resumeData?.experience?.length ? 'check' : 'times' %>"></i>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Skills
+                        <span class="badge bg-<%= user.resumeData?.skills?.length ? 'success' : 'secondary' %> rounded-pill">
+                            <i class="fas fa-<%= user.resumeData?.skills?.length ? 'check' : 'times' %>"></i>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Projects
+                        <span class="badge bg-<%= user.resumeData?.projects?.length ? 'success' : 'secondary' %> rounded-pill">
+                            <i class="fas fa-<%= user.resumeData?.projects?.length ? 'check' : 'times' %>"></i>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Resume Actions</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Build Resume</h5>
+                                <p class="card-text">Start or continue building your resume</p>
+                                <a href="/resume/personal-info" class="btn btn-primary">Continue Building</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Choose Template</h5>
+                                <p class="card-text">Select a professional template for your resume</p>
+                                <a href="/templates" class="btn btn-primary">Browse Templates</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Download PDF</h5>
+                                <p class="card-text">Download your resume as a PDF file</p>
+                                <a href="/resume/download" class="btn btn-success">Download PDF</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Preview Resume</h5>
+                                <p class="card-text">Preview how your resume looks</p>
+                                <button class="btn btn-info" onclick="previewResume()">Preview</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewResume() {
+    // Open preview in a new window
+    window.open('/resume/preview', '_blank');
+}
+</script> 

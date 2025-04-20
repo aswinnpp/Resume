@@ -1,0 +1,170 @@
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+    border-color: #27ae60;
+}
+
+/* Progress Bar */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.progress-bar {
+    background-color: #3498db;
+}
+
+/* Template Selection */
+.template-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.template-card:hover {
+    transform: translateY(-5px);
+}
+
+.template-card.selected {
+    border: 2px solid #3498db;
+}
+
+/* Resume Builder Steps */
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    position: relative;
+}
+
+.step.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.step.completed {
+    background-color: #2ecc71;
+    color: white;
+    border-color: #2ecc71;
+}
+
+/* Skills Input */
+.skills-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.skill-tag {
+    background-color: #3498db;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.skill-tag .remove {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .step-indicator {
+        flex-direction: column;
+    }
+    
+    .step {
+        margin-bottom: 10px;
+    }
+    
+    .template-card {
+        margin-bottom: 20px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+} 

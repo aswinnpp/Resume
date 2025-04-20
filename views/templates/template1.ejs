@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - <%= data.personalInfo.fullName %></title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .contact-info {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .item {
+            margin-bottom: 15px;
+        }
+        .item-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .item-subtitle {
+            color: #666;
+            font-style: italic;
+        }
+        .item-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .skill-item {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="name"><%= data.personalInfo.fullName %></div>
+        <div class="contact-info">
+            <%= data.personalInfo.email %> | <%= data.personalInfo.phone %><br>
+            <%= data.personalInfo.address %>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Professional Summary</div>
+        <p><%= data.personalInfo.summary %></p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Education</div>
+        <% data.education.forEach(function(edu) { %>
+            <div class="item">
+                <div class="item-title"><%= edu.school %></div>
+                <div class="item-subtitle"><%= edu.degree %> in <%= edu.fieldOfStudy %></div>
+                <div class="item-date"><%= edu.startDate.toLocaleDateString() %> - <%= edu.endDate.toLocaleDateString() %></div>
+                <% if (edu.gpa) { %>
+                    <div>GPA: <%= edu.gpa %></div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Experience</div>
+        <% data.experience.forEach(function(exp) { %>
+            <div class="item">
+                <div class="item-title"><%= exp.position %> at <%= exp.company %></div>
+                <div class="item-date"><%= exp.startDate.toLocaleDateString() %> - <%= exp.endDate.toLocaleDateString() %></div>
+                <p><%= exp.description %></p>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Skills</div>
+        <div class="skills-list">
+            <% data.skills.forEach(function(skill) { %>
+                <div class="skill-item"><%= skill %></div>
+            <% }); %>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Projects</div>
+        <% data.projects.forEach(function(project) { %>
+            <div class="item">
+                <div class="item-title"><%= project.name %></div>
+                <p><%= project.description %></p>
+                <div class="skills-list">
+                    <% project.technologies.forEach(function(tech) { %>
+                        <div class="skill-item"><%= tech %></div>
+                    <% }); %>
+                </div>
+                <% if (project.link) { %>
+                    <div>Link: <%= project.link %></div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html> 
