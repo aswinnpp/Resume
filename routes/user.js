@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const resumeController = require('../controllers/resumeController');
-const Resume = require('../models/resume');
+const Resume = require('../dataBase/models/Resume');
 
 // Auth routes
 router.get('/register', (req, res) => {

@@ -74,8 +74,8 @@ exports.login = passport.authenticate('local', {
 });
 
 // Logout user
-exports.logout = (req, res) => {
-  req.logout((err) => {
+exports.logout = (req, res, next) => {
+  req.logout(function(err) {
     if (err) {
       return next(err);
     }

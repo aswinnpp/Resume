@@ -63,8 +63,10 @@ connectDB();
 
 // Routes
 app.use("/", userRoute);
+app.use("/admin", adminRoute);
 
 console.log("User routes loaded");
+console.log("Admin routes loaded");
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on http://localhost:${process.env.PORT}`);

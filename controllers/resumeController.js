@@ -1,7 +1,7 @@
 const User = require('../dataBase/models/User');
 const puppeteer = require('puppeteer');
 const path = require('path');
-const Resume = require('../models/resume');
+const Resume = require('../dataBase/models/Resume');
 const pdfService = require('../services/pdfService');
 const ejs = require('ejs');
 

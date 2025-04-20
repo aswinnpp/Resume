@@ -1,0 +1,249 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">Application Settings</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- General Settings -->
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">General Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="generalSettingsForm">
+                        <div class="mb-3">
+                            <label for="siteName" class="form-label">Site Name</label>
+                            <input type="text" class="form-control" id="siteName" value="<%= settings.siteName %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="siteDescription" class="form-label">Site Description</label>
+                            <textarea class="form-control" id="siteDescription" rows="3" required><%= settings.siteDescription %></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Contact Email</label>
+                            <input type="email" class="form-control" id="contactEmail" value="<%= settings.contactEmail %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="maxResumesPerUser" class="form-label">Max Resumes Per User</label>
+                            <input type="number" class="form-control" id="maxResumesPerUser" value="<%= settings.maxResumesPerUser %>" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="defaultTemplate" class="form-label">Default Template</label>
+                            <select class="form-select" id="defaultTemplate" required>
+                                <% templates.forEach(template => { %>
+                                <option value="<%= template._id %>" <%= settings.defaultTemplate === template._id ? 'selected' : '' %>>
+                                    <%= template.name %>
+                                </option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save General Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Settings -->
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Email Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="emailSettingsForm">
+                        <div class="mb-3">
+                            <label for="smtpHost" class="form-label">SMTP Host</label>
+                            <input type="text" class="form-control" id="smtpHost" value="<%= settings.smtpHost %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="smtpPort" class="form-label">SMTP Port</label>
+                            <input type="number" class="form-control" id="smtpPort" value="<%= settings.smtpPort %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="smtpUser" class="form-label">SMTP Username</label>
+                            <input type="text" class="form-control" id="smtpUser" value="<%= settings.smtpUser %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="smtpPass" class="form-label">SMTP Password</label>
+                            <input type="password" class="form-control" id="smtpPass" value="<%= settings.smtpPass %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailFrom" class="form-label">From Email</label>
+                            <input type="email" class="form-control" id="emailFrom" value="<%= settings.emailFrom %>" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Email Settings</button>
+                        <button type="button" class="btn btn-info" onclick="testEmailSettings()">Test Email</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Security Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="securitySettingsForm">
+                        <div class="mb-3">
+                            <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+                            <input type="number" class="form-control" id="sessionTimeout" value="<%= settings.sessionTimeout %>" min="5" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="maxLoginAttempts" class="form-label">Max Login Attempts</label>
+                            <input type="number" class="form-control" id="maxLoginAttempts" value="<%= settings.maxLoginAttempts %>" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passwordMinLength" class="form-label">Minimum Password Length</label>
+                            <input type="number" class="form-control" id="passwordMinLength" value="<%= settings.passwordMinLength %>" min="8" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="requirePasswordReset" <%= settings.requirePasswordReset ? 'checked' : '' %>>
+                                <label class="form-check-label" for="requirePasswordReset">Require Password Reset on First Login</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="enableTwoFactor" <%= settings.enableTwoFactor ? 'checked' : '' %>>
+                                <label class="form-check-label" for="enableTwoFactor">Enable Two-Factor Authentication</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Security Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maintenance Settings -->
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Maintenance Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="maintenanceSettingsForm">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="maintenanceMode" <%= settings.maintenanceMode ? 'checked' : '' %>>
+                                <label class="form-check-label" for="maintenanceMode">Enable Maintenance Mode</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="maintenanceMessage" class="form-label">Maintenance Message</label>
+                            <textarea class="form-control" id="maintenanceMessage" rows="3"><%= settings.maintenanceMessage %></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="backupFrequency" class="form-label">Backup Frequency</label>
+                            <select class="form-select" id="backupFrequency">
+                                <option value="daily" <%= settings.backupFrequency === 'daily' ? 'selected' : '' %>>Daily</option>
+                                <option value="weekly" <%= settings.backupFrequency === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                                <option value="monthly" <%= settings.backupFrequency === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="backupRetention" class="form-label">Backup Retention (days)</label>
+                            <input type="number" class="form-control" id="backupRetention" value="<%= settings.backupRetention %>" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Maintenance Settings</button>
+                        <button type="button" class="btn btn-warning" onclick="createBackup()">Create Backup Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Settings management functions
+$('#generalSettingsForm').on('submit', function(e) {
+    e.preventDefault();
+    saveSettings('general', {
+        siteName: $('#siteName').val(),
+        siteDescription: $('#siteDescription').val(),
+        contactEmail: $('#contactEmail').val(),
+        maxResumesPerUser: $('#maxResumesPerUser').val(),
+        defaultTemplate: $('#defaultTemplate').val()
+    });
+});
+
+$('#emailSettingsForm').on('submit', function(e) {
+    e.preventDefault();
+    saveSettings('email', {
+        smtpHost: $('#smtpHost').val(),
+        smtpPort: $('#smtpPort').val(),
+        smtpUser: $('#smtpUser').val(),
+        smtpPass: $('#smtpPass').val(),
+        emailFrom: $('#emailFrom').val()
+    });
+});
+
+$('#securitySettingsForm').on('submit', function(e) {
+    e.preventDefault();
+    saveSettings('security', {
+        sessionTimeout: $('#sessionTimeout').val(),
+        maxLoginAttempts: $('#maxLoginAttempts').val(),
+        passwordMinLength: $('#passwordMinLength').val(),
+        requirePasswordReset: $('#requirePasswordReset').is(':checked'),
+        enableTwoFactor: $('#enableTwoFactor').is(':checked')
+    });
+});
+
+$('#maintenanceSettingsForm').on('submit', function(e) {
+    e.preventDefault();
+    saveSettings('maintenance', {
+        maintenanceMode: $('#maintenanceMode').is(':checked'),
+        maintenanceMessage: $('#maintenanceMessage').val(),
+        backupFrequency: $('#backupFrequency').val(),
+        backupRetention: $('#backupRetention').val()
+    });
+});
+
+function saveSettings(type, data) {
+    $.ajax({
+        url: `/admin/settings/${type}`,
+        method: 'POST',
+        data: data,
+        success: function(response) {
+            alert('Settings saved successfully');
+        },
+        error: function(error) {
+            alert('Error saving settings');
+        }
+    });
+}
+
+function testEmailSettings() {
+    $.ajax({
+        url: '/admin/settings/test-email',
+        method: 'POST',
+        success: function(response) {
+            alert('Test email sent successfully');
+        },
+        error: function(error) {
+            alert('Error sending test email');
+        }
+    });
+}
+
+function createBackup() {
+    $.ajax({
+        url: '/admin/settings/create-backup',
+        method: 'POST',
+        success: function(response) {
+            alert('Backup created successfully');
+        },
+        error: function(error) {
+            alert('Error creating backup');
+        }
+    });
+}
+</script>
+
+<%- include('../partials/admin-footer') %> 
