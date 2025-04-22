@@ -48,6 +48,9 @@ router.get('/dashboard', authController.isAuthenticated, async (req, res) => {
 router.get('/templates', authController.isAuthenticated, async (req, res) => {
   try {
     const templates = await Template.find().select('name description thumbnail');
+
+    
+    
     res.render('templates', {
       title: 'Select Template',
       templates,
@@ -62,6 +65,7 @@ router.get('/templates', authController.isAuthenticated, async (req, res) => {
 
 // Resume routes
 router.get('/resume/new', authController.isAuthenticated, resumeController.createNewResume);
+
 router.get('/resume/edit/:id', authController.isAuthenticated, async (req, res) => {
   try {
     const resume = await Resume.findById(req.params.id);

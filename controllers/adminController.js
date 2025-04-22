@@ -623,4 +623,49 @@ exports.getAnalytics = async (req, res) => {
         req.flash('error', 'Failed to load analytics data');
         res.redirect('/admin');
     }
+};
+
+// Use template to create new resume
+exports.useTemplate = async (req, res) => {
+    try {
+        const templateId = req.params.id;
+        
+        // Validate template exists
+        const template = await Template.findById(templateId);
+        if (!template) {
+            req.flash('error', 'Template not found');
+            return res.redirect('/admin/templates');
+        }
+
+        // Create a new resume with the selected template
+        const resume = new Resume({
+            user: req.user._id,
+            template: templateId,
+            title: 'New Resume',
+            personalInfo: {
+                fullName: req.user.name || '',
+                email: req.user.email || '',
+                phone: '',
+                location: ''
+            },
+            summary: '',
+            experience: [],
+            education: [],
+            skills: [],
+            projects: [],
+            completionStatus: 0
+        });
+
+        await resume.save();
+
+        // Increment template usage count
+        await template.incrementUsage();
+
+        req.flash('success', 'New resume created with selected template');
+        res.redirect(`/resume/edit/${resume._id}`);
+    } catch (error) {
+        console.error('Use template error:', error);
+        req.flash('error', 'Error creating resume with template');
+        res.redirect('/admin/templates');
+    }
 }; 

@@ -2,51 +2,23 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const settingsController = require('../controllers/admin/settingsController');
-const { isAdmin, ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 const authController = require('../controllers/admin/authController');
 const User = require('../dataBase/models/User');
 const Resume = require('../dataBase/models/Resume');
 const Template = require('../dataBase/models/Template');
 
-// Apply admin middleware to all routes
-router.use(isAdmin);
-
-// Admin authentication routes
+// Admin authentication routes (no auth required)
 router.get('/login', authController.getLogin);
 router.post('/login', authController.postLogin);
 router.get('/logout', authController.logout);
 
-// Protected admin routes (add more as needed)
-router.get('/', ensureAuthenticated, ensureAdmin, async (req, res) => {
-    try {
-        // Get statistics
-        const stats = {
-            totalUsers: await User.countDocuments(),
-            totalResumes: await Resume.countDocuments(),
-            totalTemplates: await Template.countDocuments(),
-            recentUsers: await User.find().sort({ createdAt: -1 }).limit(5)
-        };
-
-        res.render('admin/dashboard', {
-            user: req.user,
-            stats: stats
-        });
-    } catch (error) {
-        console.error('Dashboard error:', error);
-        res.render('admin/dashboard', {
-            user: req.user,
-            stats: {
-                totalUsers: 0,
-                totalResumes: 0,
-                totalTemplates: 0,
-                recentUsers: []
-            }
-        });
-    }
-});
+// Apply authentication and admin middleware to all routes below this
+router.use(isAuthenticated, isAdmin);
 
 // Dashboard
 router.get('/', adminController.getDashboard);
+router.get('/dashboard', adminController.getDashboard);
 
 // User management
 router.get('/users', adminController.getUsers);
@@ -60,6 +32,7 @@ router.get('/templates/:id/preview', adminController.previewTemplate);
 router.post('/templates', adminController.createTemplate);
 router.put('/templates/:id', adminController.updateTemplate);
 router.delete('/templates/:id', adminController.deleteTemplate);
+router.post('/templates/:id/use', adminController.useTemplate);
 
 // Analytics
 router.get('/analytics', adminController.getAnalytics);

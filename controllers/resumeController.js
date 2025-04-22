@@ -12,13 +12,19 @@ exports.createNewResume = async (req, res) => {
   try {
     const templateId = req.query.template;
     
+    
+    
     if (!templateId) {
+      
+      
       req.flash('error', 'Please select a template first');
       return res.redirect('/templates');
     }
 
     // Validate template ID
     if (!mongoose.Types.ObjectId.isValid(templateId)) {
+      console.log("2");
+
       req.flash('error', 'Invalid template selected');
       return res.redirect('/templates');
     }
@@ -26,6 +32,8 @@ exports.createNewResume = async (req, res) => {
     // Check if template exists
     const template = await Template.findById(templateId);
     if (!template) {
+      console.log("3");
+
       req.flash('error', 'Template not found');
       return res.redirect('/templates');
     }
@@ -265,8 +273,7 @@ exports.previewResume = async (req, res) => {
 // Download PDF
 exports.downloadPDF = async (req, res) => {
   try {
-    const resume = await Resume.findOne({ _id: req.params.id, user: req.user._id })
-      .populate('template');
+    const resume = await Resume.findOne({ _id: req.params.id, user: req.user._id });
     
     if (!resume) {
       req.flash('error', 'Resume not found');
@@ -280,28 +287,51 @@ exports.downloadPDF = async (req, res) => {
     
     const page = await browser.newPage();
     
-    // Create HTML content with template CSS and resume data
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>${resume.template.css}</style>
-        </head>
-        <body>
-          ${resume.template.html}
-        </body>
-      </html>
-    `;
+    // Use the same template as preview
+    const templatePath = path.join(__dirname, '../views/resume/preview.ejs');
+    const html = await ejs.renderFile(templatePath, {
+      resume: resume,
+      include: (path, data) => {
+        return ''; // Skip includes for PDF generation
+      }
+    });
 
-    // Replace template variables with actual resume data
-    const renderedHtml = await ejs.render(htmlContent, { resume: resume }, { async: true });
+    await page.setContent(html, { 
+      waitUntil: 'networkidle0',
+      timeout: 30000
+    });
     
-    await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
-    
+    // Add necessary styles for PDF
+    await page.addStyleTag({
+      content: `
+        @page {
+          margin: 0;
+        }
+        body {
+          margin: 0;
+          padding: 20px;
+        }
+        .no-print, .action-buttons {
+          display: none !important;
+        }
+        .preview-container {
+          box-shadow: none;
+          padding: 0;
+          max-width: 100%;
+        }
+        .resume-preview {
+          box-shadow: none;
+          padding: 20px;
+          margin: 0;
+        }
+      `
+    });
+
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
-      margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' }
+      preferCSSPageSize: true,
+      displayHeaderFooter: false
     });
 
     await browser.close();

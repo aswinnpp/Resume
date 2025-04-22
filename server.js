@@ -57,7 +57,7 @@ const authLimiter = rateLimit({
   }
 });
 
-app.use('/auth', authLimiter);
+// app.use('/auth', authLimiter);
 
 // Connect to database
 connectDB();

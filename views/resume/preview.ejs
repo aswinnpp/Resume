@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview Resume - Resume Builder</title>
+    <title>Resume Preview</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
     <style>
         .preview-container {
             max-width: 800px;
@@ -15,44 +14,96 @@
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        .resume-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .section-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        .entry {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        .entry:last-child {
+            margin-bottom: 0;
+        }
+        .entry-header {
+            margin-bottom: 15px;
+        }
+        .entry-title {
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .entry-subtitle {
+            color: #3498db;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .entry-period {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        .entry-location {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .entry-details {
+            color: #555;
+            line-height: 1.6;
+        }
+        .detail-item {
+            margin-bottom: 8px;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 10px;
+        }
         .action-buttons {
             position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 1000;
         }
-        /* Add styles for the resume preview */
-        .resume-preview {
-            background: white;
-            padding: 40px;
-            margin: 20px auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        /* Print styles */
         @media print {
             .no-print {
                 display: none !important;
-            }
-            .resume-preview {
-                box-shadow: none;
-                padding: 0;
-                margin: 0;
             }
             .preview-container {
                 box-shadow: none;
                 padding: 0;
             }
+            .resume-section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+            .entry {
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
 <body>
-    <%- include('../partials/header') %>
-
     <div class="container py-5">
         <div class="row mb-4 no-print">
             <div class="col">
-                <h1 class="display-4">Preview Resume</h1>
-                <p class="lead">Review your resume before downloading</p>
+                <h1 class="display-4">Resume Preview</h1>
+                <p class="lead">Education and Work Experience Details</p>
             </div>
             <div class="col-auto">
                 <a href="/dashboard" class="btn btn-outline-secondary">
@@ -62,10 +113,178 @@
         </div>
 
         <div class="preview-container">
-            <div class="resume-preview">
-                <%- template %>
+            <!-- Work Experience Section -->
+            <div class="resume-section">
+                <h2 class="section-title">
+                    <i class="fas fa-briefcase me-2"></i>Work Experience
+                </h2>
+                <% if (resume.experience && resume.experience.length > 0) { %>
+                    <% resume.experience.forEach(function(exp) { %>
+                        <div class="entry">
+                            <div class="entry-header">
+                                <h3 class="entry-title"><%= exp.title %></h3>
+                                <div class="entry-subtitle"><%= exp.company %></div>
+                                <div class="entry-period">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    <%= exp.startDate %> - <%= exp.endDate || 'Present' %>
+                                </div>
+                                <% if (exp.location) { %>
+                                    <div class="entry-location">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        <%= exp.location %>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="entry-details">
+                                <% if (exp.description) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Description:</div>
+                                        <%= exp.description %>
+                                    </div>
+                                <% } %>
+                                <% if (exp.responsibilities && exp.responsibilities.length > 0) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Key Responsibilities:</div>
+                                        <ul class="mb-0">
+                                            <% exp.responsibilities.forEach(function(resp) { %>
+                                                <li><%= resp %></li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                <% } %>
+                                <% if (exp.achievements && exp.achievements.length > 0) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Achievements:</div>
+                                        <ul class="mb-0">
+                                            <% exp.achievements.forEach(function(achievement) { %>
+                                                <li><%= achievement %></li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                <% } %>
+                                <% if (exp.technologies) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Technologies Used:</div>
+                                        <%= exp.technologies %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-muted">No work experience added yet.</p>
+                <% } %>
             </div>
+
+            <!-- Education Section -->
+            <div class="resume-section">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap me-2"></i>Education
+                </h2>
+                <% if (resume.education && resume.education.length > 0) { %>
+                    <% resume.education.forEach(function(edu) { %>
+                        <div class="entry">
+                            <div class="entry-header">
+                                <h3 class="entry-title"><%= edu.degree %></h3>
+                                <div class="entry-subtitle"><%= edu.institution %></div>
+                                <div class="entry-period">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    <%= edu.startDate %> - <%= edu.endDate || 'Present' %>
+                                </div>
+                                <% if (edu.location) { %>
+                                    <div class="entry-location">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        <%= edu.location %>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="entry-details">
+                                <% if (edu.fieldOfStudy) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Field of Study:</div>
+                                        <%= edu.fieldOfStudy %>
+                                    </div>
+                                <% } %>
+                                <% if (edu.gpa) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">GPA:</div>
+                                        <%= edu.gpa %>
+                                    </div>
+                                <% } %>
+                                <% if (edu.courses && edu.courses.length > 0) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Key Courses:</div>
+                                        <ul class="mb-0">
+                                            <% edu.courses.forEach(function(course) { %>
+                                                <li><%= course %></li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                <% } %>
+                                <% if (edu.achievements && edu.achievements.length > 0) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Achievements:</div>
+                                        <ul class="mb-0">
+                                            <% edu.achievements.forEach(function(achievement) { %>
+                                                <li><%= achievement %></li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                <% } %>
+                                <% if (edu.description) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Additional Information:</div>
+                                        <%= edu.description %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-muted">No education details added yet.</p>
+                <% } %>
+            </div>
+
+            <div class="resume-section">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap me-2"></i>Experience
+                </h2>
+                <% if (resume.experience && resume.experience.length > 0) { %>
+                    <% resume.experience.forEach(function(experience) { %>
+                        <div class="entry">
+                            <div class="entry-header">
+                                <h3 class="entry-title"><%= experience.company %></h3>
+                                <div class="entry-subtitle"><%= experience.position %></div>
+                                <div class="entry-period">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    <%= experience.startDate %> - <%= experience.endDate || 'Present' %>
+                                </div>
+                                <% if (experience.location) { %>
+                                    <div class="entry-location">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        <%= experience.location %>
+                                    </div>
+                                <% } %>
+                            </div>
+                           
+                                <% if (experience.description) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Additional Information:</div>
+                                        <%= experience.description %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-muted">No education details added yet.</p>
+                <% } %>
+            </div>
+
+            
         </div>
+
+        
 
         <div class="action-buttons no-print">
             <a href="/resume/download/<%= resume._id %>" class="btn btn-primary btn-lg">
@@ -76,8 +295,6 @@
             </button>
         </div>
     </div>
-
-    <%- include('../partials/footer') %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

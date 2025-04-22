@@ -3,36 +3,37 @@ const puppeteer = require('puppeteer');
 exports.generatePDF = async (resume, renderedTemplate) => {
   let browser;
   try {
-    // Launch browser with additional arguments for better compatibility
-    browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+
 
     const page = await browser.newPage();
-    
-    // Set viewport for consistent rendering
-    await page.setViewport({
-      width: 1200,
-      height: 1600,
-      deviceScaleFactor: 2
+
+    // Inject CSS to shrink content to fit one A4 page
+    const fittedTemplate = `
+      <style>
+        html, body {
+          width: 210mm;
+          height: 297mm;
+          margin: 0;
+          padding: 10mm;
+          overflow: hidden;
+          font-size: 10px; /* Reduce font-size to fit more content */
+          transform: scale(0.85); /* Adjust this if needed */
+          transform-origin: top left;
+        }
+      </style>
+      ${renderedTemplate}
+    `;
+
+    await page.setContent(fittedTemplate, {
+      waitUntil: ['networkidle0', 'domcontentloaded']
     });
 
-    // Set content and wait for network to be idle
-    await page.setContent(renderedTemplate, {
-      waitUntil: ['networkidle0', 'domcontentloaded', 'load']
-    });
-
-    // Generate PDF with proper formatting
+    // Use exact width and height to lock content into one page
     const pdf = await page.pdf({
-      format: 'A4',
+      width: '210mm',
+      height: '297mm',
       printBackground: true,
-      margin: {
-        top: '20mm',
-        right: '20mm',
-        bottom: '20mm',
-        left: '20mm'
-      },
+      margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
       preferCSSPageSize: true
     });
 
@@ -40,9 +41,9 @@ exports.generatePDF = async (resume, renderedTemplate) => {
   } catch (error) {
     console.error('PDF Generation Error:', error);
     throw new Error('Failed to generate PDF: ' + error.message);
-  } finally {
+  } finally {  
     if (browser) {
       await browser.close();
     }
   }
-}; 
+};
